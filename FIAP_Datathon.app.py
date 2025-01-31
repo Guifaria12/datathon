@@ -1,3 +1,5 @@
+import streamlit as st
+
 st.subheader ("""
 **Faculdade de Informática e Administração Paulista – FIAP**
 
