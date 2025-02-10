@@ -3,7 +3,7 @@ import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
 
-st.subheader ("""
+st.subheader("""
 **Faculdade de Informática e Administração Paulista – FIAP**
 
 **Grupo 47: Cristiano de Araujo Santos Filho, Eduardo Vilela Silva, Guilherme de Faria
@@ -129,31 +129,36 @@ import re
 # Função para extrair apenas números da coluna
 def extrair_numero(fase):
     # Verifica se a fase é "ALFA" e retorna 0
-    if str(fase).upper() == 'ALFA':
+    if fase == "ALFA":
         return 0
-    # Verifica se a fase é um texto como 'FASE X' e retorna o número
+    # Caso contrário, tenta extrair números da fase usando expressão regular
     match = re.search(r'\d+', str(fase))
     if match:
         return int(match.group())
-    return fase  # Caso não tenha número, retorna o valor original
+    return None  # Retorna None caso não encontre número
 
-# Aplicando a função na coluna 'Fase'
+# Aplica a função na coluna "Fase"
 base_completa['Fase'] = base_completa['Fase'].apply(extrair_numero)
 
-# Plotando a distribuição de 'origem'
-plt.figure(figsize=(10, 5))
-base_completa['origem'].value_counts().plot(kind='bar', color='skyblue')
-plt.title('Distribuição de Origem')
-plt.xlabel('Origem')
-plt.ylabel('Contagem')
-plt.xticks(rotation=45)
-plt.show()
+# Atualizar a coluna "Fase Ideal" e "Alvo" para valores nulos
+base_completa['Fase Ideal'].replace(0, np.nan, inplace=True)
+base_completa['Alvo'].replace(0, np.nan, inplace=True)
 
-# Plotando a distribuição de 'Status_entrada'
-plt.figure(figsize=(10, 5))
-base_completa['Status_entrada'].value_counts().plot(kind='bar', color='lightgreen')
-plt.title('Distribuição de Status_entrada')
-plt.xlabel('Status de Entrada')
-plt.ylabel('Contagem')
-plt.xticks(rotation=45)
-plt.show()
+# Mapeamento de formatação para as colunas 'Fase Ideal' e 'Alvo'
+base_completa['Fase Ideal'] = base_completa['Fase Ideal'].astype(float)
+base_completa['Alvo'] = base_completa['Alvo'].astype(float)
+
+# Definindo título para a área de gráfico
+st.subheader("Gráfico de Fase Ideal")
+
+# Contar a quantidade de estudantes por fase ideal
+fase_ideal_count = base_completa['Fase Ideal'].value_counts()
+
+# Plotar gráfico de barras para 'Fase Ideal'
+fig, ax = plt.subplots()
+fase_ideal_count.plot(kind='bar', ax=ax)
+ax.set_title('Distribuição por Fase Ideal')
+ax.set_xlabel('Fase Ideal')
+ax.set_ylabel('Quantidade de Estudantes')
+st.pyplot(fig)  # Exibir o gráfico corretamente no Streamlit
+
