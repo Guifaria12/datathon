@@ -369,8 +369,8 @@ print("\nClassification Report")
 print(classification_report(y_test, predicao, zero_division=0))
 
 
-    print("\nRoc Curve\n")
-    roc_display = RocCurveDisplay.from_estimator(modelo, X_test, y_test)
+print("\nRoc Curve\n")
+roc_display = RocCurveDisplay.from_estimator(modelo, X_test, y_test)
 
 from sklearn.linear_model import LogisticRegression
 modelo_logistico = LogisticRegression()
