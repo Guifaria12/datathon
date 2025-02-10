@@ -1,12 +1,13 @@
 import pandas as pd
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.preprocessing import OneHotEncoder, MinMaxScaler, OrdinalEncoder
+from imblearn.over_sampling import SMOTE
 
 
 # Classes para pipeline
 
 class DropFeatures(BaseEstimator,TransformerMixin):
-    def __init__(self,feature_to_drop = ['ID_Cliente']):
+    def __init__(self,feature_to_drop = ['Ano ingresso', 'origem']):
         self.feature_to_drop = feature_to_drop
     def fit(self,df):
         return self
@@ -18,10 +19,23 @@ class DropFeatures(BaseEstimator,TransformerMixin):
             print('Uma ou mais features não estão no DataFrame')
             return df
 
+class MinMax(BaseEstimator,TransformerMixin):
+    def __init__(self,min_max_scaler  = ['Fase', 'IAA', 'IEG', 'IPS', 'IDA', 'Matem', 'Portug', 'Inglês', 'IPV', 'IAN', 'Idade', 'IPP', 'Defasagem', 'INDE']):
+        self.min_max_scaler = min_max_scaler
+    def fit(self,df):
+        return self
+    def transform(self,df):
+        if (set(self.min_max_scaler ).issubset(df.columns)):
+            min_max_enc = MinMaxScaler()
+            df[self.min_max_scaler] = min_max_enc.fit_transform(df[self.min_max_scaler ])
+            return df
+        else:
+            print('Uma ou mais features não estão no DataFrame')
+            return df
+
 class OneHotEncodingNames(BaseEstimator,TransformerMixin):
-    def __init__(self,OneHotEncoding = ['Estado_civil', 'Moradia', 'Categoria_de_renda', 
-                                        'Ocupacao']):                                      
-                                                                               
+    def __init__(self,OneHotEncoding = ['Gênero', 'Instituição de ensino']):
+
         self.OneHotEncoding = OneHotEncoding
 
     def fit(self,df):
@@ -41,8 +55,8 @@ class OneHotEncodingNames(BaseEstimator,TransformerMixin):
                 return df
 
             # função para concatenar as features com aquelas que não passaram pelo one-hot-encoding
-            def concat_with_rest(df,one_hot_enc_df,OneHotEncoding):              
-                
+            def concat_with_rest(df,one_hot_enc_df,OneHotEncoding):
+                # get the rest of the features
                 outras_features = [feature for feature in df.columns if feature not in OneHotEncoding]
                 # concaternar o restante das features com as features que passaram pelo one-hot-encoding
                 df_concat = pd.concat([one_hot_enc_df, df[outras_features]],axis=1)
@@ -55,30 +69,47 @@ class OneHotEncodingNames(BaseEstimator,TransformerMixin):
             df_full = concat_with_rest(df, df_OneHotEncoding,self.OneHotEncoding)
             return df_full
 
-class OrdinalFeature(BaseEstimator,TransformerMixin):
-    def __init__(self,ordinal_feature = ['Grau_escolaridade']):
-        self.ordinal_feature = ordinal_feature
-    def fit(self,df):
-        return self
-    def transform(self,df):
-        if 'Grau_escolaridade' in df.columns:
-            ordinal_encoder = OrdinalEncoder()
-            df[self.ordinal_feature] = ordinal_encoder.fit_transform(df[self.ordinal_feature])
-            return df
-        else:
-            print('Grau_escolaridade não está no DataFrame')
-            return df
-
-class MinMaxWithFeatNames(BaseEstimator,TransformerMixin):
-    def __init__(self,min_max_scaler_ft = ['Idade', 'Rendimento_anual', 'Tamanho_familia', 'Anos_empregado']):
-        self.min_max_scaler_ft = min_max_scaler_ft
-    def fit(self,df):
-        return self
-    def transform(self,df):
-        if (set(self.min_max_scaler_ft).issubset(df.columns)):
-            min_max_enc = MinMaxScaler()
-            df[self.min_max_scaler_ft] = min_max_enc.fit_transform(df[self.min_max_scaler_ft])
-            return df
         else:
             print('Uma ou mais features não estão no DataFrame')
+            return df
+
+class Oversample(BaseEstimator, TransformerMixin):
+    def __init__(self, target_col='Status_entrada'):
+        self.target_col = target_col  # Define a coluna alvo
+
+    def fit(self, df, y=None):
+        return self  # Como não treinamos nada, apenas retorna a instância
+
+    def transform(self, df):
+        if self.target_col in df.columns:
+            oversample = SMOTE(sampling_strategy='minority')
+
+            # Separar features e target
+            X = df.drop(columns=[self.target_col])
+            y = df[self.target_col]
+
+            # Aplicar SMOTE
+            X_bal, y_bal = oversample.fit_resample(X, y)
+
+            # Criar novo DataFrame balanceado
+            df_bal = pd.concat([pd.DataFrame(X_bal, columns=X.columns), pd.Series(y_bal, name=self.target_col)], axis=1)
+
+            return df_bal
+        else:
+            raise ValueError(f"A coluna alvo '{self.target_col}' não está no DataFrame.")
+
+class Oversample(BaseEstimator,TransformerMixin):
+    def __init__(self):
+        pass
+    def fit(self,df):
+        return self
+    def transform(self,df):
+        if 'Mau' in df.columns:
+            # função smote para superamostrar a classe minoritária para corrigir os dados desbalanceados
+            oversample = SMOTE(sampling_strategy='minority')
+            X_bal, y_bal = oversample.fit_resample(df.loc[:, df.columns != 'Status_entrada'], df['Status_entrada'])
+            df_bal = pd.concat([pd.DataFrame(X_bal),pd.DataFrame(y_bal)],axis=1)
+            return df_bal
+        else:
+            print("O target não está no DataFrame")
             return df
