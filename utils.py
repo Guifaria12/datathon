@@ -3,24 +3,24 @@ from sklearn.preprocessing import MinMaxScaler, OneHotEncoder, OrdinalEncoder
 from imblearn.over_sampling import SMOTE
 
 class DropFeatures(BaseEstimator,TransformerMixin):
-    def __init__(self,feature_to_drop = ['Ano ingresso', 'origem']):
+def __init__(self,feature_to_drop = ['Ano ingresso', 'origem']):
         self.feature_to_drop = feature_to_drop
-    def fit(self,df):
+def fit(self,df):
         return self
-    def transform(self,df):
+def transform(self,df):
         if (set(self.feature_to_drop).issubset(df.columns)):
             df.drop(self.feature_to_drop,axis=1,inplace=True)
             return df
-        else:
+else:
             print('Uma ou mais features não estão no DataFrame')
             return df
 
-      class MinMax(BaseEstimator,TransformerMixin):
-    def __init__(self,min_max_scaler  = ['Fase', 'IAA', 'IEG', 'IPS', 'IDA', 'Matem', 'Portug', 'Inglês', 'IPV', 'IAN', 'Idade', 'IPP', 'Defasagem', 'INDE']):
+class MinMax(BaseEstimator,TransformerMixin):
+def __init__(self,min_max_scaler  = ['Fase', 'IAA', 'IEG', 'IPS', 'IDA', 'Matem', 'Portug', 'Inglês', 'IPV', 'IAN', 'Idade', 'IPP', 'Defasagem', 'INDE']):
         self.min_max_scaler = min_max_scaler
-    def fit(self,df):
+def fit(self,df):
         return self
-    def transform(self,df):
+def transform(self,df):
         if (set(self.min_max_scaler ).issubset(df.columns)):
             min_max_enc = MinMaxScaler()
             df[self.min_max_scaler] = min_max_enc.fit_transform(df[self.min_max_scaler ])
@@ -29,18 +29,18 @@ class DropFeatures(BaseEstimator,TransformerMixin):
             print('Uma ou mais features não estão no DataFrame')
             return df
 
-      class OneHotEncodingNames(BaseEstimator,TransformerMixin):
-    def __init__(self,OneHotEncoding = ['Gênero', 'Instituição de ensino']):
+class OneHotEncodingNames(BaseEstimator,TransformerMixin):
+def __init__(self,OneHotEncoding = ['Gênero', 'Instituição de ensino']):
 
         self.OneHotEncoding = OneHotEncoding
 
-    def fit(self,df):
+def fit(self,df):
         return self
 
-    def transform(self,df):
+def transform(self,df):
         if (set(self.OneHotEncoding).issubset(df.columns)):
             # função para one-hot-encoding das features
-            def one_hot_enc(df,OneHotEncoding):
+def one_hot_enc(df,OneHotEncoding):
                 one_hot_enc = OneHotEncoder()
                 one_hot_enc.fit(df[OneHotEncoding])
                 # obtendo o resultado dos nomes das colunas
@@ -51,7 +51,7 @@ class DropFeatures(BaseEstimator,TransformerMixin):
                 return df
 
             # função para concatenar as features com aquelas que não passaram pelo one-hot-encoding
-            def concat_with_rest(df,one_hot_enc_df,OneHotEncoding):
+def concat_with_rest(df,one_hot_enc_df,OneHotEncoding):
                 # get the rest of the features
                 outras_features = [feature for feature in df.columns if feature not in OneHotEncoding]
                 # concaternar o restante das features com as features que passaram pelo one-hot-encoding
@@ -69,14 +69,14 @@ class DropFeatures(BaseEstimator,TransformerMixin):
             print('Uma ou mais features não estão no DataFrame')
             return df
 
-      class Oversample(BaseEstimator, TransformerMixin):
-    def __init__(self, target_col='Status_entrada'):
+class Oversample(BaseEstimator, TransformerMixin):
+def __init__(self, target_col='Status_entrada'):
         self.target_col = target_col  # Define a coluna alvo
 
-    def fit(self, df, y=None):
+def fit(self, df, y=None):
         return self  # Como não treinamos nada, apenas retorna a instância
 
-    def transform(self, df):
+def transform(self, df):
         if self.target_col in df.columns:
             oversample = SMOTE(sampling_strategy='minority')
 
@@ -94,7 +94,7 @@ class DropFeatures(BaseEstimator,TransformerMixin):
         else:
             raise ValueError(f"A coluna alvo '{self.target_col}' não está no DataFrame.")
 
-      class Oversample(BaseEstimator,TransformerMixin):
+class Oversample(BaseEstimator,TransformerMixin):
     def __init__(self):
         pass
     def fit(self,df):
