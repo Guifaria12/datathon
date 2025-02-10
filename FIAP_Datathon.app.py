@@ -1,6 +1,7 @@
 import pandas as pd
 import streamlit as st
 import numpy as np
+import matplotlib.pyplot as plt
 
 st.subheader ("""
 **Faculdade de Informática e Administração Paulista – FIAP**
@@ -122,8 +123,6 @@ mapeamento_genero = {
 # Aplicar o mapeamento para a coluna 'Gênero'
 base_completa['Gênero'] = base_completa['Gênero'].replace(mapeamento_genero)
 
-# Verificar as classificações únicas após o agrupamento
-base_completa['Gênero'].unique()
 
 import re
 
@@ -141,5 +140,20 @@ def extrair_numero(fase):
 # Aplicando a função na coluna 'Fase'
 base_completa['Fase'] = base_completa['Fase'].apply(extrair_numero)
 
-# Verificando os valores únicos na coluna após a transformação
-print(base_completa['Fase'].unique())
+# Plotando a distribuição de 'origem'
+plt.figure(figsize=(10, 5))
+base_completa['origem'].value_counts().plot(kind='bar', color='skyblue')
+plt.title('Distribuição de Origem')
+plt.xlabel('Origem')
+plt.ylabel('Contagem')
+plt.xticks(rotation=45)
+plt.show()
+
+# Plotando a distribuição de 'Status_entrada'
+plt.figure(figsize=(10, 5))
+base_completa['Status_entrada'].value_counts().plot(kind='bar', color='lightgreen')
+plt.title('Distribuição de Status_entrada')
+plt.xlabel('Status de Entrada')
+plt.ylabel('Contagem')
+plt.xticks(rotation=45)
+plt.show()
