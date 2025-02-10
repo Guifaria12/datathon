@@ -42,6 +42,8 @@ base_completa['Status_entrada'].fillna('Desistente', inplace=True)
 base_completa.replace('#DIV/0!', np.nan, inplace=True)
 base_completa.replace('INCLUIR', np.nan, inplace=True)
 
+print(base_completa.notnull().sum().sort_values(ascending=False).to_string())
+
 base_completa = base_completa.drop(columns=['Nº Av', 'RA', 'Avaliador1', 'Avaliador2', 'Data de Nasc', 'Nome Anonimizado', 'Fase Ideal', 'Avaliador3', 'Ativo/ Inativo', 'Ativo/ Inativo.1', 'Escola', 'Destaque IDA', 'Destaque IPV', 'Avaliador4', 'Nome', 'Destaque IEG', 'Rec Av1', 'Fase ideal', 'Atingiu PV', 'Indicado', 'Ano nasc', 'Cg', 'Cf', 'Avaliador3', 'Rec Psicologia' ,'Ct', 'Rec Av3' , 'Rec Av2', 'Turma', 'Data de Nasc', 'Avaliador6', 'Destaque IPV.1', 'Avaliador5', 'Rec Av4'])
 
 # Substituir as vírgulas por pontos e converter para float
@@ -95,6 +97,8 @@ base_completa.drop(columns=['Idade 22'], inplace=True)
 base_completa['Defasagem'] = base_completa[['Defas', 'Defasagem']].sum(axis=1, skipna=True)
 base_completa.drop(columns=['Defas'], inplace=True)
 
+print(base_completa.notnull().sum().sort_values(ascending=False).to_string())
+
 # Mapeamento das classificações semelhantes
 mapeamento = {
     'Privada - Programa de apadrinhamento': 'Privada',
@@ -123,42 +127,42 @@ mapeamento_genero = {
 # Aplicar o mapeamento para a coluna 'Gênero'
 base_completa['Gênero'] = base_completa['Gênero'].replace(mapeamento_genero)
 
+# Verificar as classificações únicas após o agrupamento
+base_completa['Gênero'].unique()
 
 import re
 
 # Função para extrair apenas números da coluna
 def extrair_numero(fase):
     # Verifica se a fase é "ALFA" e retorna 0
-    if fase == "ALFA":
+    if str(fase).upper() == 'ALFA':
         return 0
-    # Caso contrário, tenta extrair números da fase usando expressão regular
+    # Verifica se a fase é um texto como 'FASE X' e retorna o número
     match = re.search(r'\d+', str(fase))
     if match:
         return int(match.group())
-    return None  # Retorna None caso não encontre número
+    return fase  # Caso não tenha número, retorna o valor original
 
-# Aplica a função na coluna "Fase"
+# Aplicando a função na coluna 'Fase'
 base_completa['Fase'] = base_completa['Fase'].apply(extrair_numero)
 
-# Atualizar a coluna "Fase Ideal" e "Alvo" para valores nulos
-base_completa['Fase Ideal'].replace(0, np.nan, inplace=True)
-base_completa['Alvo'].replace(0, np.nan, inplace=True)
+# Verificando os valores únicos na coluna após a transformação
+print(base_completa['Fase'].unique())
 
-# Mapeamento de formatação para as colunas 'Fase Ideal' e 'Alvo'
-base_completa['Fase Ideal'] = base_completa['Fase Ideal'].astype(float)
-base_completa['Alvo'] = base_completa['Alvo'].astype(float)
+# Plotando a distribuição de 'origem'
+plt.figure(figsize=(10, 5))
+base_completa['origem'].value_counts().plot(kind='bar', color='skyblue')
+plt.title('Distribuição de Origem')
+plt.xlabel('Origem')
+plt.ylabel('Contagem')
+plt.xticks(rotation=45)
+st.pyplot()  # Exibe o gráfico no Streamlit
 
-# Definindo título para a área de gráfico
-st.subheader("Gráfico de Fase Ideal")
-
-# Contar a quantidade de estudantes por fase ideal
-fase_ideal_count = base_completa['Fase Ideal'].value_counts()
-
-# Plotar gráfico de barras para 'Fase Ideal'
-fig, ax = plt.subplots()
-fase_ideal_count.plot(kind='bar', ax=ax)
-ax.set_title('Distribuição por Fase Ideal')
-ax.set_xlabel('Fase Ideal')
-ax.set_ylabel('Quantidade de Estudantes')
-st.pyplot(fig)  # Exibir o gráfico corretamente no Streamlit
-
+# Plotando a distribuição de 'Status_entrada'
+plt.figure(figsize=(10, 5))
+base_completa['Status_entrada'].value_counts().plot(kind='bar', color='lightgreen')
+plt.title('Distribuição de Status_entrada')
+plt.xlabel('Status de Entrada')
+plt.ylabel('Contagem')
+plt.xticks(rotation=45)
+st.pyplot()  # Exibe o gráfico no Streamlit
