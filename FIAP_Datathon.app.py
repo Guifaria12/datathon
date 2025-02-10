@@ -2,6 +2,9 @@ import pandas as pd
 import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
+from sklearn.base import BaseEstimator, TransformerMixin
+from sklearn.preprocessing import MinMaxScaler, OneHotEncoder, OrdinalEncoder
+from imblearn.over_sampling import SMOTE
 
 st.subheader("""
 **Faculdade de Informática e Administração Paulista – FIAP**
