@@ -363,10 +363,10 @@ plt.title('Matriz de Confusão')
 # Exibir o gráfico
 plt.show()
 
-    # Fazendo a predicao dos dados de teste e calculando o classification report
-    predicao = modelo.predict(X_test)
-    print("\nClassification Report")
-    print(classification_report(y_test, predicao, zero_division=0))
+# Fazendo a predicao dos dados de teste e calculando o classification report
+predicao = modelo.predict(X_test)
+print("\nClassification Report")
+print(classification_report(y_test, predicao, zero_division=0))
 
 
     print("\nRoc Curve\n")
