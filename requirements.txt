@@ -4,4 +4,3 @@ joblib
 scikit-learn
 imbalanced-learn
 matplotlib
-sklearn.metrics
