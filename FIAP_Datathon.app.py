@@ -194,3 +194,16 @@ base_completa['Status_entrada'] = base_completa['Status_entrada'].replace({'Desi
 
 base_completa.drop(columns=['Pedra'], inplace = True)
 base_completa.dropna(inplace=True)
+
+class DropFeatures(BaseEstimator,TransformerMixin):
+    def __init__(self,feature_to_drop = ['Ano ingresso', 'origem']):
+        self.feature_to_drop = feature_to_drop
+    def fit(self,df):
+        return self
+    def transform(self,df):
+        if (set(self.feature_to_drop).issubset(df.columns)):
+            df.drop(self.feature_to_drop,axis=1,inplace=True)
+            return df
+        else:
+            print('Uma ou mais features não estão no DataFrame')
+            return df
