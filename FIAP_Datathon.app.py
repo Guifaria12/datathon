@@ -349,16 +349,16 @@ def roda_modelo(modelo):
     print(f"Métrica KS: {kstest}")
 
     print("\nConfusion Matrix\n")
-   # Gerar a matriz de confusão
-matriz_confusao = confusion_matrix(y_test, y_pred)
-
-# Plotar a matriz de confusão
-plt.figure(figsize=(8, 6))
-sns.heatmap(matriz_confusao, annot=True, fmt='d', cmap='Blues', cbar=False, 
-            xticklabels=['Classe 0', 'Classe 1'], yticklabels=['Classe 0', 'Classe 1'])
-plt.xlabel('Classe Prevista')
-plt.ylabel('Classe Verdadeira')
-plt.title('Matriz de Confusão')
+ # Criando matriz de confusão
+fig, ax = plt.subplots(figsize=(7,7))
+matriz_confusao = ConfusionMatrixDisplay.from_estimator(modelo, X_test, y_test, normalize='true',
+                                            display_labels=['Veterano', 'Desistente'],
+                                            ax=ax, cmap=plt.cm.Blues)
+ax.set_title("Matriz de Confusão\n Normalizada", fontsize=16, fontweight="bold")
+ax.set_xlabel("Label predita", fontsize=18)
+ax.set_ylabel("Label verdadeira", fontsize=18)
+plt.grid(False)
+plt.show(matriz_confusao)
 
 # Exibir o gráfico
 plt.show()
