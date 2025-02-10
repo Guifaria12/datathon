@@ -150,19 +150,19 @@ base_completa['Fase'] = base_completa['Fase'].apply(extrair_numero)
 print(base_completa['Fase'].unique())
 
 # Plotando a distribuição de 'origem'
-plt.figure(figsize=(10, 5))
-base_completa['origem'].value_counts().plot(kind='bar', color='skyblue')
-plt.title('Distribuição de Origem')
-plt.xlabel('Origem')
-plt.ylabel('Contagem')
-plt.xticks(rotation=45)
-st.pyplot()  # Exibe o gráfico no Streamlit
+fig, ax = plt.subplots(figsize=(10, 5))
+base_completa['origem'].value_counts().plot(kind='bar', color='skyblue', ax=ax)
+ax.set_title('Distribuição de Origem')
+ax.set_xlabel('Origem')
+ax.set_ylabel('Contagem')
+ax.set_xticklabels(ax.get_xticklabels(), rotation=45)
+st.pyplot(fig)  # Exibe o gráfico no Streamlit
 
 # Plotando a distribuição de 'Status_entrada'
-plt.figure(figsize=(10, 5))
-base_completa['Status_entrada'].value_counts().plot(kind='bar', color='lightgreen')
-plt.title('Distribuição de Status_entrada')
-plt.xlabel('Status de Entrada')
-plt.ylabel('Contagem')
-plt.xticks(rotation=45)
-st.pyplot()  # Exibe o gráfico no Streamlit
+fig, ax = plt.subplots(figsize=(10, 5))
+base_completa['Status_entrada'].value_counts().plot(kind='bar', color='lightgreen', ax=ax)
+ax.set_title('Distribuição de Status_entrada')
+ax.set_xlabel('Status de Entrada')
+ax.set_ylabel('Contagem')
+ax.set_xticklabels(ax.get_xticklabels(), rotation=45)
+st.pyplot(fig)  # Exibe o gráfico no Streamlit
