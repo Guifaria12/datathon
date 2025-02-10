@@ -358,6 +358,7 @@ def roda_modelo(modelo):
     ax.set_xlabel("Label predita", fontsize=18)
     ax.set_ylabel("Label verdadeira", fontsize=18)
     plt.grid(False)
+    matriz_confusao.plot()
     plt.show()
 
     # Fazendo a predicao dos dados de teste e calculando o classification report
