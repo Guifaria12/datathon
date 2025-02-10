@@ -349,28 +349,25 @@ def roda_modelo(modelo):
     print(f"Métrica KS: {kstest}")
 
     print("\nConfusion Matrix\n")
- # Criando matriz de confusão
-fig, ax = plt.subplots(figsize=(7,7))
-matriz_confusao = ConfusionMatrixDisplay.from_estimator(modelo, X_test, y_test, normalize='true',
+    # Criando matriz de confusão
+    fig, ax = plt.subplots(figsize=(7,7))
+    matriz_confusao = ConfusionMatrixDisplay.from_estimator(modelo, X_test, y_test, normalize='true',
                                             display_labels=['Veterano', 'Desistente'],
                                             ax=ax, cmap=plt.cm.Blues)
-ax.set_title("Matriz de Confusão\n Normalizada", fontsize=16, fontweight="bold")
-ax.set_xlabel("Label predita", fontsize=18)
-ax.set_ylabel("Label verdadeira", fontsize=18)
-plt.grid(False)
-plt.show(matriz_confusao)
+    ax.set_title("Matriz de Confusão\n Normalizada", fontsize=16, fontweight="bold")
+    ax.set_xlabel("Label predita", fontsize=18)
+    ax.set_ylabel("Label verdadeira", fontsize=18)
+    plt.grid(False)
+    plt.show(matriz_confusao)
 
-# Exibir o gráfico
-plt.show()
-
-# Fazendo a predicao dos dados de teste e calculando o classification report
-predicao = modelo.predict(X_test)
-print("\nClassification Report")
-print(classification_report(y_test, predicao, zero_division=0))
+    # Fazendo a predicao dos dados de teste e calculando o classification report
+    predicao = modelo.predict(X_test)
+    print("\nClassification Report")
+    print(classification_report(y_test, predicao, zero_division=0))
 
 
-print("\nRoc Curve\n")
-roc_display = RocCurveDisplay.from_estimator(modelo, X_test, y_test)
+    print("\nRoc Curve\n")
+    roc_display = RocCurveDisplay.from_estimator(modelo, X_test, y_test)
 
 from sklearn.linear_model import LogisticRegression
 modelo_logistico = LogisticRegression()
