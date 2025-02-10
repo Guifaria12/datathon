@@ -1,5 +1,6 @@
 import pandas as pd
 import streamlit as st
+import numpy as np
 
 st.subheader ("""
 **Faculdade de Informática e Administração Paulista – FIAP**
@@ -24,3 +25,15 @@ base_dados_2024 = pd.read_csv(url_2024)
 base_dados_2022['origem'] = 'Base2022'
 base_dados_2023['origem'] = 'Base2023'
 base_dados_2024['origem'] = 'Base2024'
+
+base_completa = pd.concat([base_dados_2022, base_dados_2023, base_dados_2024], ignore_index=True)
+
+base_completa.sort_values(by='origem', inplace=True, ascending=False)
+
+base_completa.drop_duplicates(keep='first', inplace=True)
+
+base_completa.loc[base_completa['Ano ingresso'] == 2024, 'Status_entrada'] = 'Novato'
+
+base_completa.loc[(base_completa['Ano ingresso'] != 2024) & (base_completa['origem'] == 'Base2024') , 'Status_entrada'] = 'Veterano'
+
+base_completa['Status_entrada'].fillna('Desistente', inplace=True)
