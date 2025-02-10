@@ -166,3 +166,28 @@ ax.set_xlabel('Status de Entrada')
 ax.set_ylabel('Contagem')
 ax.set_xticklabels(ax.get_xticklabels(), rotation=45)
 st.pyplot(fig)  # Exibe o gráfico no Streamlit
+
+base_completa.info()
+
+# Substituindo os valores de percentual para o formato desejado
+base_completa['IPS'] = base_completa['IPS'].replace({r'%': '', r',': '.'}, regex=True).astype(float) / 100
+
+# Para garantir que o valor decimal tenha vírgula
+base_completa['IPS'] = base_completa['IPS'].apply(lambda x: str(x).replace('.', ','))
+
+# Colunas que você deseja converter para float
+colunas_para_float = ['IAA', 'IEG', 'IPS', 'IDA', 'IPV', 'IAN', 'IPP', 'INDE']  # Substitua pelos nomes das suas colunas
+
+# Substituir as vírgulas por pontos e converter para float
+for coluna in colunas_para_float:
+    base_completa[coluna] = base_completa[coluna].replace({',': '.'}, regex=True).astype(float)
+
+# Verificando o tipo das colunas após a conversão
+print(base_completa[colunas_para_float].dtypes)
+
+base_completa = base_completa[base_completa['Status_entrada'] != 'Novato']
+
+base_completa['Status_entrada'] = base_completa['Status_entrada'].replace({'Desistente': 1, 'Veterano': 0})
+
+base_completa.drop(columns=['Pedra'], inplace = True)
+base_completa.dropna(inplace=True)
