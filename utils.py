@@ -113,3 +113,16 @@ class Oversample(BaseEstimator,TransformerMixin):
         else:
             print("O target não está no DataFrame")
             return df
+
+from sklearn.pipeline import Pipeline
+
+def pipeline(df):
+
+    pipeline = Pipeline([
+        ('feature_dropper', DropFeatures()),
+        ('OneHotEncoding', OneHotEncodingNames()),
+        ('min_max_scaler', MinMax()),
+        ('oversample', Oversample())
+    ])
+    df_pipeline = pipeline.fit_transform(df)
+    return df_pipeline
