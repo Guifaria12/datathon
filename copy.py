@@ -42,7 +42,6 @@ base_completa.loc[(base_completa['Ano ingresso'] != 2024) & (base_completa['orig
 
 base_completa['Status_entrada'].fillna('Desistente', inplace=True)
 
-base_completa.replace('#DIV/0!', np.nan, inplace=True)
 base_completa.replace('INCLUIR', np.nan, inplace=True)
 
 print(base_completa.notnull().sum().sort_values(ascending=False).to_string())
