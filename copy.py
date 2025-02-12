@@ -13,7 +13,7 @@ dados = pd.read_csv('https://raw.githubusercontent.com/alura-tech/alura-tech-pos
 ############################# Streamlit ############################
 st.markdown('<style>div[role="listbox"] ul{background-color: #6e42ad}; </style>', unsafe_allow_html=True)
 
-st.markdown("<h1 style='text-align: center; '> Formulário para Solicitação de Cartão de Crédito 🤑</h1>", unsafe_allow_html = True)
+st.markdown("<h1 style='text-align: center; '> DATATHON - Modelo Preditivo </h1>", unsafe_allow_html = True)
 
 st.warning('Preencha o formulário com todos os seus dados pessoais e clique no botão **ENVIAR** no final da página.')
 
