@@ -97,11 +97,6 @@ def data_split(df, test_size):
 
 treino_df, teste_df = data_split(dados, 0.2)
 
-#Criando novo cliente
-cliente_predict_df = pd.DataFrame([novo_cliente],columns=teste_df.columns)
-
-#Concatenando novo cliente ao dataframe dos dados de teste
-teste_novo_cliente  = pd.concat([teste_df,cliente_predict_df],ignore_index=True)
 # Mapeamento das classificações semelhantes
 mapeamento = {
     'Privada - Programa de apadrinhamento': 'Privada',
