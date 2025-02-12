@@ -42,8 +42,6 @@ base_completa.loc[(base_completa['Ano ingresso'] != 2024) & (base_completa['orig
 
 base_completa['Status_entrada'].fillna('Desistente', inplace=True)
 
-base_completa.replace('INCLUIR', np.nan, inplace=True)
-
 print(base_completa.notnull().sum().sort_values(ascending=False).to_string())
 
 base_completa = base_completa.drop(columns=['Nº Av', 'RA', 'Avaliador1', 'Avaliador2', 'Data de Nasc', 'Nome Anonimizado', 'Fase Ideal', 'Avaliador3', 'Ativo/ Inativo', 'Ativo/ Inativo.1', 'Escola', 'Destaque IDA', 'Destaque IPV', 'Avaliador4', 'Nome', 'Destaque IEG', 'Rec Av1', 'Fase ideal', 'Atingiu PV', 'Indicado', 'Ano nasc', 'Cg', 'Cf', 'Avaliador3', 'Rec Psicologia' ,'Ct', 'Rec Av3' , 'Rec Av2', 'Turma', 'Data de Nasc', 'Avaliador6', 'Destaque IPV.1', 'Avaliador5', 'Rec Av4'])
